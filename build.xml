@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project basedir="." default="all" name="Spock">
+
+    <!-- ********************************************************** -->
+    <!-- *                                                        * -->
+    <!-- * Where to find things...                                * -->
+    <!-- *                                                        * -->
+    <!-- ********************************************************** -->
+    <property name="src_dir"		value="./src"/>
+    <property name="build_dir"          value="."/>
+    <property name="classes_dir"	value="${build_dir}/classes"/>
+    <property name="jar_dir"            value="./jar"/>
+    <property name="bin_dir"            value="${build_dir}/bin"/>
+    <property name="backup_dir"         value="./bak"/>
+    <property name="javadoc_dir"	value="doc"/>
+    <property name="javadoc_check_dir"  value="${build_dir}/javadoc_check"/>
+    <property name="javadoc_zip"	value="javadoc.zip"/>
+    <property name="javadoc_level"	value="public"/>
+
+    <!-- Load the environment -->
+    <property environment="env"/>
+
+    <patternset id="all"
+                    includes="edu/**,various/**,ioproperties/**,debug/**,jmat/**,run/**,weka/**,JMatLink.java,edu/ucsd/gui/*.gif,edu/ucsd/gui/*.jpg,weka/gui/*.gif"
+                    excludes="edu/cmu/sphinx/research/parallel/**"/>
+
+    <!-- ********************************************************** -->
+    <!-- *                                                        * -->
+    <!-- * Builds srcs, jars, demos                               * -->
+    <!-- *                                                        * -->
+    <!-- ********************************************************** -->
+    <target name="all"
+	    depends="compile_src,jars"
+	    description="Build everything">
+	<echo message="Build complete."/>
+    </target>
+
+
+    <!-- ********************************************************** -->
+    <!-- *                                                        * -->
+    <!-- * Builds just the srcs.                                  * -->
+    <!--                <classpath refid="libs"/> * -->
+    <!-- *                                                        * -->
+    <!-- ********************************************************** -->
+    <target name="compile_src"
+	    description="Build just the srcs">
+	<mkdir dir="${classes_dir}"/>
+	<javac debug="true"
+	       source="1.4"
+ 	       srcdir="${src_dir}"
+	       deprecation="true"
+	       destdir="${classes_dir}">
+            <patternset refid="all"/>
+	</javac>
+    </target>
+
+
+    <!-- ********************************************************** -->
+    <!-- *                                                        * -->
+    <!-- * Generates the jar files                                * -->
+    <!-- *                                                        * -->
+    <!-- ********************************************************** -->
+    <target name="jars"
+            depends="spock,dukov,ufpaweka"
+	    description="Builds all the jar files"/>
+
+
+    <!-- spock.jar -->
+    <property name="spock" value="${jar_dir}/ufpaspeech.jar"/>
+
+    <target name="spock"
+	    depends="compile_src"
+            description="Create ${jar_dir}/ufpaspeech.jar">
+        <mkdir dir="${jar_dir}"/>
+        <jar destfile="${spock}"
+             manifest="${src_dir}/spock.manifest"
+	     compress="true"
+             excludes="edu/cmu/sphinx/tools/**">
+            <fileset dir="${classes_dir}"/>
+        </jar>
+    </target>
+
+
+    <!-- dukov.jar -->
+    <property name="dukov" value="${jar_dir}/dukov.jar"/>
+
+    <target name="dukov"
+	    depends="compile_src"
+            description="Create ${jar_dir}/dukov.jar">
+        <mkdir dir="${jar_dir}"/>
+        <jar destfile="${dukov}"
+             manifest="${src_dir}/dukov.manifest"
+	     compress="true"
+             excludes="edu/cmu/sphinx/tools/**">
+            <fileset dir="${classes_dir}"/>
+        </jar>
+    </target>
+
+  <!-- Put everything in ${classes_dir} into the ufpaweka.jar file -->
+  <target name="ufpaweka" depends="compile_src"
+   description="Create an executable jar file in ${jar_dir}">
+    <jar jarfile="${jar_dir}/ufpaweka.jar" 
+      basedir="${classes_dir}">
+     <manifest>
+       <attribute name="Main-Class" value="weka.gui.explorer.Explorer"/>
+     </manifest>
+    </jar>
+  </target>
+
+
+    <!-- ********************************************************** -->
+    <!-- *                                                        * -->
+    <!-- * Generates the javadoc                                  * -->
+    <!-- *                                                        * -->
+    <!-- ********************************************************** -->
+    <property name="javadoc_desc" value="Curupira"/>
+
+    <target name="javadoc"
+	    description="Generate javadoc, optionally with '-Daccess=private'">
+        <mkdir dir="${javadoc_dir}"/>
+        <javadoc sourcepath="${src_dir}"
+	         source="1.4"
+		 additionalparam="-breakiterator"
+		 destdir="${javadoc_dir}"
+		 packagenames="edu.*"
+                 excludepackagenames="edu.cmu.sphinx.trainer"
+		 overview="${src_dir}/overview.html"
+		 windowtitle="${javadoc_desc}"
+                 doctitle="${javadoc_desc}"
+                 access="${javadoc_level}">
+            <link href="http://java.sun.com/products/java-media/speech/forDevelopers/jsapi-doc"
+                  offline="true" />
+	    <classpath refid="libs"/>
+        </javadoc>
+    </target>
+
+
+    <!-- ********************************************************** -->
+    <!-- *                                                        * -->
+    <!-- * Deletes all build output and *~ file droppings         * -->
+    <!-- *                                                        * -->
+    <!-- ********************************************************** -->
+    <target name="clean" description="Delete all build output">
+	<delete>
+	    <fileset defaultexcludes="no" dir="." includes="**/*~"/>
+	</delete>
+	<delete dir="${build_dir}"/>
+	<delete dir="${javadoc_dir}"/>
+    </target>
+
+</project>

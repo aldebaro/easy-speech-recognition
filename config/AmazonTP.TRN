@@ -1,0 +1,101 @@
+Database.Type=GENERAL
+TrainingManager.Type=ISOLATED_SEGMENT
+#Specify the front end:
+#PatternGenerator.FileName=mfcceda8k.FCN
+PatternGenerator.Type = ALIEN
+PatternGenerator.Description = nofrontend 
+EmptyPatternGenerator.nspaceDimension = 6
+#
+#No need to specify the phone set in this case
+#TableOfLabels.FileName=
+#TableOfLabels.Type=SPOLTECH64
+#
+#The HMM topology (left-right, for example)
+TrainingManager.DefaultHMMConfigurationFileName=amazontp.HCN
+
+TrainingManager.nmaximumNumberOfGaussiansPerMixture=2
+
+#The table to use when testing:
+OffLineIsolatedSegmentsClassifier.tableOfLabelsForScoring = C:/home/aldebaro/besta/nofrontend/tableForScoring.TBL
+#
+#Directories:
+TrainingManager.GeneralOutputDirectory=/home/aldebaro/besta
+TrainingManager.TrainSpeechDataRootDirectory=C:/Datasets/AmazonTP/train
+TrainingManager.TestSpeechDataRootDirectory=C:/Datasets/AmazonTP/test
+OffLineIsolatedSegmentsClassifier.parametersRootDirectory=C:/home/aldebaro/besta/nofrontend/features/test
+OffLineIsolatedSegmentsClassifier.hmmsRootDirectory=C:/home/aldebaro/besta/nofrontend/hmms
+OffLineIsolatedSegmentsClassifier.transcriptionsRootDirectory=C:/home/aldebaro/besta/transcriptions
+#
+#
+#Control the stages we want to run
+TrainingManager.oshouldConvertSpeechDataIntoParameters=false
+#finer control over the front end
+TrainingManager.oshouldConvertIsolatedSpeechDataIntoParameters=true
+TrainingManager.oshouldConvertSentenceSpeechDataIntoParameters=true
+#
+TrainingManager.oshouldCreateHMMFiles= true
+TrainingManager.oshouldCreateTranscriptionsForSpeechFiles= true
+TrainingManager.oshouldRunClassification=true
+#
+#Control testing
+TrainingManager.oshouldRunRecognitionForTestingData=true
+TrainingManager.oshouldRunRecognitionForTrainingData=true
+#
+#The minimum number of frames and examples per phone
+ContinuousHMMReestimator.nminimumNumberOfFramesForValidPattern=1
+ContinuousHMMReestimator.nminimumNumberOfPatternsPerModel=3
+#
+###############################################
+#From now, these should not need to be changed:
+###############################################
+TrainingManager.oshouldSkipReestimationIfFileExists=true
+TrainingManager.oshouldWriteReportFile=true
+TrainingManager.ouseAbsolutePath=false
+TrainingManager.oshouldGuessTestConfigurationAndOverwriteExistingValues=true
+TrainingManager.nverbose=1
+TrainingManager.ThreadPriority=5
+#######################
+OffLineIsolatedSegmentsClassifier.hMMSetFileName=hmms.zip
+OffLineIsolatedSegmentsClassifier.nminimumNumberOfFramesInValidPattern=3
+OffLineIsolatedSegmentsClassifier.oareTranscriptionsAvailable=false
+OffLineIsolatedSegmentsClassifier.oisTraining=false
+OffLineIsolatedSegmentsClassifier.oshouldWriteLattices=false
+TrainingManager.oshouldCreateMonophoneHMMPrototypes=true
+TrainingManager.oshouldCreateMonophoneHMMWithBaumWelchForIsolatedSegments=false
+TrainingManager.oshouldCreateMonophoneHMMWithEmbeddedBaumWelch=false
+TrainingManager.oshouldCreatFileWithDynamicRanges=true
+TrainingManager.oshouldRecursivelyCreateMonophoneHMMWithBaumWelchForIsolatedSegments=true
+TrainingManager.oshouldRecursivelyCreateMonophoneHMMWithEmbeddedBaumWelch=false
+TrainingManager.oshouldRecursivelyCreateMonophoneHMMWithSegmentalKMeansForIsolatedSegments=false
+#######################
+# HMM Training
+#######################
+ContinuousHMMReestimator.fconvergenceThreshold=1.0E-4
+ContinuousHMMReestimator.fcovarianceFloor=1.0E-4
+ContinuousHMMReestimator.fmixtureWeightFloor=0.005
+ContinuousHMMReestimator.nmaximumIterations=20
+ContinuousHMMReestimator.oshouldUpdateCovariance=true
+ContinuousHMMReestimator.oshouldUpdateMean=true
+ContinuousHMMReestimator.oshouldUpdateTransitionMatrix=true
+ContinuousHMMReestimator.oshouldUpdateWeights=true
+TrainingManager.dsegmentalKmeansThresholdToStopIterations=0.02
+TrainingManager.nembeddedBaumNumberOfIterations=2
+#what is the meaning of this? don't we define model elsewhere?
+TrainingManager.nsegmentalKmeansGaussiansIncrement=1
+TrainingManager.nsegmentalKmeansInitialNumberOfGaussians=1
+TrainingManager.osegmentalKmeansUseBaumWelchAfterwards=true
+#######################
+ConvertALIENFrontEndToSOPFiles.ExtensionForAlienFiles=ALI
+ConvertALIENFrontEndToSOPFiles.inputDirectory=
+ConvertALIENFrontEndToSOPFiles.oareBigEndian=true
+####################### For TIMIT:
+TrainingManager.oshouldCopyDatabaseToUniqueDirectory=false
+#if above is true:
+#TrainingManager.OriginalDirectoryOfDatabaseTestData=/databases/timit/test/
+#TrainingManager.OriginalDirectoryOfDatabaseTrainData=/databases/timit/train/
+#
+#Nikola additions:
+#
+#TrainingManager.oshouldCreateTriphoneModels=false
+END_OF_HEADER
+

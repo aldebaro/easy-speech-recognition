@@ -1,0 +1,17 @@
+Aldebaro - March 3, 2010
+
+After importing the project, select it on the Project Explorer at the left
+and go to menu Project -> Properties.
+Then choose "Java compiler" and
+
+Enable project specif settings
+
+JDK compliance
+
+Compiler compliance level => 1.4
+Generated classes compatibility => 1.4
+Disallow identifiers called 'enum' => Ignore
+
+The classfile generation can have all options selected (for debugging)
+
+I got 2,183 warning messages

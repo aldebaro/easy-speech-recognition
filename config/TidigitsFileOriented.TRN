@@ -1,0 +1,95 @@
+Database.Type=GENERAL
+TrainingManager.Type=ISOLATED_SEGMENT
+TrainingManager.nmaximumNumberOfGaussiansPerMixture=1
+#Specify the front end:
+PatternGenerator.FileName=mfcceda8k.FCN
+#The HMM topology (left-right, for example)
+TrainingManager.DefaultHMMConfigurationFileName=lr55.HCN
+#
+#Directories:
+TrainingManager.GeneralOutputDirectory=c:/temp/tidigits
+TrainingManager.TrainSpeechDataRootDirectory=C:/akdatasets/tidigits8k/train
+TrainingManager.TestSpeechDataRootDirectory=C:/akdatasets/tidigits8k/test
+#
+#The table to use when testing:
+#OffLineIsolatedSegmentsClassifier.tableOfLabelsForScoring=/home/aldebaro/outspoltech/64models/mfccedac39w400s160/SPOLTECH64.TBL
+#
+#Control the stages we want to run
+TrainingManager.oshouldConvertSpeechDataIntoParameters=false
+#finer control over the front end
+TrainingManager.oshouldConvertIsolatedSpeechDataIntoParameters=true
+TrainingManager.oshouldConvertSentenceSpeechDataIntoParameters=true
+#
+TrainingManager.oshouldCreateHMMFiles= true
+TrainingManager.oshouldCreateTranscriptionsForSpeechFiles= true
+TrainingManager.oshouldRunClassification=true
+#
+#Control testing
+TrainingManager.oshouldRunRecognitionForTestingData=true
+TrainingManager.oshouldRunRecognitionForTrainingData=false
+#
+#The minimum number of frames and examples per phone
+ContinuousHMMReestimator.nminimumNumberOfFramesForValidPattern=1
+ContinuousHMMReestimator.nminimumNumberOfPatternsPerModel=3
+#
+###############################################
+#From now, these should not need to be changed:
+###############################################
+TrainingManager.oshouldSkipReestimationIfFileExists=true
+TrainingManager.oshouldWriteReportFile=true
+TrainingManager.ouseAbsolutePath=false
+TrainingManager.oshouldGuessTestConfigurationAndOverwriteExistingValues=true
+TrainingManager.nverbose=1
+TrainingManager.ThreadPriority=5
+#######################
+OffLineIsolatedSegmentsClassifier.hMMSetFileName=hmms.zip
+#OffLineIsolatedSegmentsClassifier.hmmsRootDirectory=/home/TIMITSim/48models/mfccedac39w400s160/
+OffLineIsolatedSegmentsClassifier.nminimumNumberOfFramesInValidPattern=3
+OffLineIsolatedSegmentsClassifier.oareTranscriptionsAvailable=true
+OffLineIsolatedSegmentsClassifier.oisTraining=false
+OffLineIsolatedSegmentsClassifier.oshouldWriteLattices=false
+#OffLineIsolatedSegmentsClassifier.parametersRootDirectory=c:/simulations/timit/48models/mfcceda39w240s80/features/test/
+#OffLineIsolatedSegmentsClassifier.transcriptionsRootDirectory=c:/simulations/timit/39models/transcriptions/monophones/isolated/test/
+##
+TrainingManager.oshouldCreateMonophoneHMMPrototypes=true
+TrainingManager.oshouldCreateMonophoneHMMWithBaumWelchForIsolatedSegments=false
+TrainingManager.oshouldCreateMonophoneHMMWithEmbeddedBaumWelch=false
+TrainingManager.oshouldCreatFileWithDynamicRanges=true
+TrainingManager.oshouldRecursivelyCreateMonophoneHMMWithBaumWelchForIsolatedSegments=true
+TrainingManager.oshouldRecursivelyCreateMonophoneHMMWithEmbeddedBaumWelch=false
+TrainingManager.oshouldRecursivelyCreateMonophoneHMMWithSegmentalKMeansForIsolatedSegments=false
+#######################
+# HMM Training
+#######################
+ContinuousHMMReestimator.fconvergenceThreshold=1.0E-4
+ContinuousHMMReestimator.fcovarianceFloor=1.0E-4
+ContinuousHMMReestimator.fmixtureWeightFloor=0.005
+ContinuousHMMReestimator.nmaximumIterations=20
+ContinuousHMMReestimator.oshouldUpdateCovariance=true
+ContinuousHMMReestimator.oshouldUpdateMean=true
+ContinuousHMMReestimator.oshouldUpdateTransitionMatrix=true
+ContinuousHMMReestimator.oshouldUpdateWeights=true
+TrainingManager.dsegmentalKmeansThresholdToStopIterations=0.02
+TrainingManager.nembeddedBaumNumberOfIterations=2
+TrainingManager.nsegmentalKmeansGaussiansIncrement=1
+TrainingManager.nsegmentalKmeansInitialNumberOfGaussians=1
+TrainingManager.osegmentalKmeansUseBaumWelchAfterwards=true
+#######################
+ConvertALIENFrontEndToSOPFiles.ExtensionForAlienFiles=ALI
+ConvertALIENFrontEndToSOPFiles.inputDirectory=
+ConvertALIENFrontEndToSOPFiles.oareBigEndian=true
+END_OF_HEADER
+
+TableOfLabels.Type = GENERIC
+TableOfLabels.nnumberOfEntries = 11
+TableOfLabels.Entry_0 = zero
+TableOfLabels.Entry_1 = one
+TableOfLabels.Entry_2 = two
+TableOfLabels.Entry_3 = three
+TableOfLabels.Entry_4 = four
+TableOfLabels.Entry_5 = five
+TableOfLabels.Entry_6 = six
+TableOfLabels.Entry_7 = seven
+TableOfLabels.Entry_8 = eight
+TableOfLabels.Entry_9 = nine
+TableOfLabels.Entry_10 = oh

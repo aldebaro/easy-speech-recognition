@@ -1,0 +1,971 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=iso-8859-1">
+<meta name="ProgId" content="Word.Document">
+<meta name="Originator" content="Microsoft Word 9">
+<meta name="GENERATOR" content="Microsoft FrontPage Express 2.0">
+<title>Spock 2 - User's guide</title>
+<link rel="File-List" href="./SpockUsersGuide_files/filelist.xml">
+<!--[if gte mso 9]><xml>
+ <o:DocumentProperties>
+  <o:Author>Preferred Customer</o:Author>
+  <o:Template>Normal</o:Template>
+  <o:LastAuthor>Preferred Customer</o:LastAuthor>
+  <o:Revision>4</o:Revision>
+  <o:TotalTime>109</o:TotalTime>
+  <o:Created>2000-09-28T23:29:00Z</o:Created>
+  <o:LastSaved>2000-09-29T01:18:00Z</o:LastSaved>
+  <o:Pages>7</o:Pages>
+  <o:Words>2902</o:Words>
+  <o:Characters>16545</o:Characters>
+  <o:Company>Dell Computer Corporation</o:Company>
+  <o:Lines>137</o:Lines>
+  <o:Paragraphs>33</o:Paragraphs>
+  <o:CharactersWithSpaces>20318</o:CharactersWithSpaces>
+  <o:Version>9.2720</o:Version>
+ </o:DocumentProperties>
+</xml><![endif]-->
+<style>
+<!--
+ /* Style Definitions */
+p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{mso-style-parent:"";
+	margin:0in;
+	margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";}
+a:link, span.MsoHyperlink
+	{color:blue;
+	text-decoration:underline;
+	text-underline:single;}
+p
+	{font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";}
+pre
+	{margin:0in;
+	margin-bottom:.0001pt;
+	font-size:10.0pt;
+	font-family:"Courier New";
+	mso-fareast-font-family:"Courier New";}
+@page Section1
+	{size:8.5in 11.0in;
+	margin:1.0in 1.25in 1.0in 1.25in;
+	mso-header-margin:.5in;
+	mso-footer-margin:.5in;
+	mso-paper-source:0;}
+div.Section1
+	{page:Section1;}
+-->
+</style>
+<!--[if gte mso 9]><xml>
+ <o:shapedefaults v:ext="edit" spidmax="1027"/>
+</xml><![endif]-->
+<!--[if gte mso 9]><xml>
+ <o:shapelayout v:ext="edit">
+  <o:idmap v:ext="edit" data="1"/>
+ </o:shapelayout></xml><![endif]-->
+</head>
+
+<body bgcolor="#FFFFFF" link="#0000FF" vlink="#0000FF"
+lang="EN-US" style="tab-interval:.5in">
+
+<h1 align="center" style="text-align:center">Spock version 2.0 -
+User Guide</h1>
+
+<h1><strong>Introduction</strong></h1>
+
+<p>For training HMM from scratch, basically the user must
+specify: a) TableOfLabels, b) ParametricRepresentation, c)
+HMM.Topology and d) Training Manager TRN file. This information
+is put together in the Training Manager TRN file.</p>
+
+<p>Training is decomposed into 3 stages: a) creating text (ASCII)
+files that inform the location of speech data files and
+eventually, specific segments (phonemes, for example). These
+files are called DataLocator files and are responsible for
+providing a standard interface between the databases (each has
+its own specificities) and the software; b) creating parameters
+like MFCC, which are written in SetOfPatterns files with
+extension SOP; c) training the HMMs, which are written together
+in one compressed JAR file (it follows the ZIP format and can be
+read by Winzip, for example). TrainingManager is the class
+responsible for processing all stages of training.</p>
+
+<p>There is support for two types of training: SENTENCE and
+ISOLATED_SEGMENT and two types of databases: FILE_ORIENTED and
+TIMIT. It is assumed that a FILE_ORIENTED database does not have
+labeled files, so there is no way of training SENTENCE in this
+case. Therefore the combination SENTENCE and FILE_ORIENTED does
+not make sense. It was recently added a third type of training
+called CUT_SENTENCE that can be used until we have embedded
+training implemented.</p>
+
+<h1>Input parameters configuration</h1>
+
+<p>When specifying parameters:</p>
+
+<p>- Some parameters have a fixed number of options called
+&quot;Type&quot;. For example, Database.Type can be FILE_ORIENTED
+or TIMIT. Strings that reprensent &quot;Types&quot; are case
+sensitive and must be capital letters: SENTENCES, MFCC, etc.</p>
+
+<p>- File extensions are not case sensitive: it can be TRN or trn
+or even tRn, for example.</p>
+
+<p>Through all simulations, input parameters configuration is
+based on an implemented subclass of Java Properties class, called
+HeaderProperties. The parameters are specified through a
+&quot;keyword&quot; and its value, as for example:<i><br>
+</i><em><i>MFCC.nnumberOfParameters = 12</i></em><i><br>
+</i><em><i>TableOfLabels.FileName = c:/data/table.TBL</i></em><i><br>
+</i><em><i>MFCCPatternGenerator.oisAverageCepstrumSubtracted =
+false</i></em><i><br>
+</i>Notice the convention:<br>
+a) The class where the value will be primarily used is specified
+in the beginning of the keyword and its name is followed by a
+dot.<br>
+b) For intrinsic data types, the first letter indicates the type
+according to the adopted <a href="SpockConventions.htm">convention</a>.
+For Strings, it is assumed a capital letter as in TableOfLabels.<strong>F</strong>ileName,
+as explained in the table below.</p>
+
+<table border="1" cellpadding="0" cellspacing="3"
+style="mso-cellspacing:1.5pt">
+    <tr>
+        <td style="padding:.75pt .75pt .75pt .75pt"><strong>Keyword</strong></td>
+        <td style="padding:.75pt .75pt .75pt .75pt"><strong>Value</strong></td>
+        <td style="padding:.75pt .75pt .75pt .75pt"><strong>Data
+        type</strong></td>
+    </tr>
+    <tr>
+        <td style="padding:.75pt .75pt .75pt .75pt"><em>MFCC.nnumberOfParameters</em></td>
+        <td style="padding:.75pt .75pt .75pt .75pt"><em>12</em></td>
+        <td style="padding:.75pt .75pt .75pt .75pt"><em>integer</em></td>
+    </tr>
+    <tr>
+        <td style="padding:.75pt .75pt .75pt .75pt"><em>TableOfLabels.FileName</em></td>
+        <td style="padding:.75pt .75pt .75pt .75pt"><em>c:/data/table.TBL</em></td>
+        <td style="padding:.75pt .75pt .75pt .75pt"><em>String</em></td>
+    </tr>
+    <tr>
+        <td style="padding:.75pt .75pt .75pt .75pt"><em>MFCCPatternGenerator.oisAverageCepstrumSubtracted</em></td>
+        <td style="padding:.75pt .75pt .75pt .75pt"><em>false</em></td>
+        <td style="padding:.75pt .75pt .75pt .75pt"><em>boolean</em></td>
+    </tr>
+</table>
+
+<p>The initial HeaderProperties specified by the user can
+eventually contain only the <strong><i>mandatory </i></strong>parameters.
+For parameters that are not mandatory there are <strong><i>default</i></strong><em>
+</em>values that will be assumed by the software. Each time the
+software uses a default value or generates any kind of new
+information (like the name of an output file), it adds this
+information to HeaderProperties. In the end of processing, a
+report file is generated with the complete HeaderProperties. This
+file is useful for checking the adopted parameters and as a valid
+Properties file, it can be used itself in additional simulations.</p>
+
+<p>Objects like PatternGenerator and TableOfLabels are
+instantiated with HeaderProperties as input argument to their
+constructors. This HeaderProperties can contain the necessary
+parameters or the name of a file that contains the parameters.
+For example, a HeaderProperties specifies a PatternGenerator
+through the keyword PatternGenerator.FileName or describing all
+mandatory parameters (PatternGenerator.Type, etc.). The objects
+will try to find the parameters in HeaderProperties only in case
+the correspondent file name was not found, i.e., specification
+through a file name precedes the parameters themselves. For
+constructing a TableOfLabel from a HeaderProperties, the software
+will look for the keyword &quot;TableOfLabels.FileName&quot; to
+read the table from this file. If the keyword
+&quot;TableOfLabels.FileName&quot; is not found, the software
+will look for the keyword &quot;TableOfLabels.Type&quot; (the
+same procedure is adopted to effectively interpret the ASCII file
+specified by &quot;TableOfLabels.FileName&quot;).</p>
+
+<h1><b><i>Table of file types</i></b></h1>
+
+<table border="1" cellpadding="0" cellspacing="3"
+style="mso-cellspacing:1.5pt">
+    <tr>
+        <td valign="top" width="8%"
+        style="width:8.0%;padding:.75pt .75pt .75pt .75pt">Generator</td>
+        <td valign="top" width="14%"
+        style="width:14.0%;padding:.75pt .75pt .75pt .75pt">Name</td>
+        <td align="center" valign="top" width="8%"
+        style="width:8.0%;padding:.75pt .75pt .75pt .75pt">Extension</td>
+        <td valign="top" width="70%"
+        style="width:70.0%;padding:.75pt .75pt .75pt .75pt">Description</td>
+    </tr>
+    <tr>
+        <td valign="top" width="8%"
+        style="width:8.0%;padding:.75pt .75pt .75pt .75pt">User</td>
+        <td valign="top" width="14%"
+        style="width:14.0%;padding:.75pt .75pt .75pt .75pt">Pattern</td>
+        <td align="center" valign="top" width="8%"
+        style="width:8.0%;padding:.75pt .75pt .75pt .75pt"><p
+        align="center" style="text-align:center">PTR</p>
+        </td>
+        <td valign="top" width="70%"
+        style="width:70.0%;padding:.75pt .75pt .75pt .75pt">Informations
+        to construct a PatternGenerator. Its first line is the
+        identifier string that represents that info, and then it
+        comes the parameters of that specific pattern generator.</td>
+    </tr>
+    <tr>
+        <td valign="top" width="8%"
+        style="width:8.0%;padding:.75pt .75pt .75pt .75pt">User</td>
+        <td valign="top" width="14%"
+        style="width:14.0%;padding:.75pt .75pt .75pt .75pt">HMM
+        Configuration</td>
+        <td align="center" valign="top" width="8%"
+        style="width:8.0%;padding:.75pt .75pt .75pt .75pt"><p
+        align="center" style="text-align:center">HCN</p>
+        </td>
+        <td valign="top" width="70%"
+        style="width:70.0%;padding:.75pt .75pt .75pt .75pt">Describes
+        the configuration (topology, etc.) of an unique HMM.
+        Provides the number of states, Gaussians per mixture,
+        etc.</td>
+    </tr>
+    <tr>
+        <td valign="top" width="8%"
+        style="width:8.0%;padding:.75pt .75pt .75pt .75pt">User</td>
+        <td valign="top" width="14%"
+        style="width:14.0%;padding:.75pt .75pt .75pt .75pt">Labels</td>
+        <td align="center" valign="top" width="8%"
+        style="width:8.0%;padding:.75pt .75pt .75pt .75pt"><p
+        align="center" style="text-align:center">TBL</p>
+        </td>
+        <td valign="top" width="70%"
+        style="width:70.0%;padding:.75pt .75pt .75pt .75pt">Represents
+        a TableOfLabels. For each table entry, there is a line
+        with the labels associated to that entry or there is a
+        keyword that specifies a standard table as TIMIT60.</td>
+    </tr>
+    <tr>
+        <td valign="top" width="8%"
+        style="width:8.0%;padding:.75pt .75pt .75pt .75pt">User</td>
+        <td valign="top" width="14%"
+        style="width:14.0%;padding:.75pt .75pt .75pt .75pt">Training</td>
+        <td align="center" valign="top" width="8%"
+        style="width:8.0%;padding:.75pt .75pt .75pt .75pt"><p
+        align="center" style="text-align:center">TRN</p>
+        </td>
+        <td valign="top" width="70%"
+        style="width:70.0%;padding:.75pt .75pt .75pt .75pt">Informations
+        necessary to perform the whole training (front-end to
+        creating HMMs) or part of it.</td>
+    </tr>
+    <tr>
+        <td>User</td>
+        <td>Testing</td>
+        <td align="center"><p align="center">TST</p>
+        </td>
+        <td><p align="left">Informations necessary to perform
+        off-line testing to calculate, for example, the error
+        rate.</p>
+        </td>
+    </tr>
+    <tr>
+        <td valign="top" width="8%"
+        style="width:8.0%;padding:.75pt .75pt .75pt .75pt">Soft</td>
+        <td valign="top" width="14%"
+        style="width:14.0%;padding:.75pt .75pt .75pt .75pt">HMM</td>
+        <td align="center" valign="top" width="8%"
+        style="width:8.0%;padding:.75pt .75pt .75pt .75pt"><p
+        align="center" style="text-align:center">HMM</p>
+        </td>
+        <td valign="top" width="70%"
+        style="width:70.0%;padding:.75pt .75pt .75pt .75pt">Stores
+        a HMM model in a binary (efficient) way. The header is in
+        ASCII and contains the labels the HMM represents, the PTR
+        file name used for training the model, the DTL that
+        locates the speech data used for training, and the HMM
+        topology.</td>
+    </tr>
+    <tr>
+        <td valign="top" width="8%"
+        style="width:8.0%;padding:.75pt .75pt .75pt .75pt">Soft</td>
+        <td valign="top" width="14%"
+        style="width:14.0%;padding:.75pt .75pt .75pt .75pt">Set
+        of HMMs</td>
+        <td align="center" valign="top" width="8%"
+        style="width:8.0%;padding:.75pt .75pt .75pt .75pt"><p
+        align="center" style="text-align:center">JAR</p>
+        </td>
+        <td valign="top" width="70%"
+        style="width:70.0%;padding:.75pt .75pt .75pt .75pt">Represents
+        a group of HMMs compressed in a ZIP-compatible file (it
+        can be manipulated by Winzip, for example). It has an
+        associated TBL file. For each table entry it has a HMM.</td>
+    </tr>
+    <tr>
+        <td valign="top" width="8%"
+        style="width:8.0%;padding:.75pt .75pt .75pt .75pt">Soft</td>
+        <td valign="top" width="14%"
+        style="width:14.0%;padding:.75pt .75pt .75pt .75pt">SetOfPatterns</td>
+        <td align="center" valign="top" width="8%"
+        style="width:8.0%;padding:.75pt .75pt .75pt .75pt"><p
+        align="center" style="text-align:center">SOP</p>
+        </td>
+        <td valign="top" width="70%"
+        style="width:70.0%;padding:.75pt .75pt .75pt .75pt">Stores
+        the parametric representation (ex: MFCC). Its header is
+        written as ASCII and stores information about the used
+        PatternGenerator (as a PTR file, such information can be
+        used to construct a PatternGenerator) and the name of a
+        SGM Segments file in order to identify the speech file
+        associated to a Pattern.</td>
+    </tr>
+    <tr>
+        <td valign="top" width="8%"
+        style="width:8.0%;padding:.75pt .75pt .75pt .75pt;
+  height:5.4pt">Soft</td>
+        <td valign="top" width="14%"
+        style="width:14.0%;padding:.75pt .75pt .75pt .75pt;
+  height:5.4pt">DataLocators</td>
+        <td align="center" valign="top" width="8%"
+        style="width:8.0%;padding:.75pt .75pt .75pt .75pt;
+  height:5.4pt"><p
+        align="center"
+        style="text-align:center;mso-line-height-alt:5.4pt">DTL</p>
+        </td>
+        <td valign="top" width="70%"
+        style="width:70.0%;padding:.75pt .75pt .75pt .75pt;
+  height:5.4pt">It
+        gives information for finding in a database selected
+        speech data segments.</td>
+    </tr>
+</table>
+
+<h1>User generated files</h1>
+
+<p>All user generated configuration files are text (ASCII) files.
+The last line <strong>must</strong> be END_OF_HEADER because such
+information is also written as header of some binary files creted
+by the software, as SetOfPatterns for example. In this case,
+END_OF_HEADER helps to separate the header from the data in
+binary form.</p>
+
+<h3><strong>PatternGenerator PTR file</strong></h3>
+
+<table border="1" cellpadding="0" cellspacing="3"
+style="mso-cellspacing:1.5pt">
+    <tr>
+        <td style="padding:.75pt .75pt .75pt .75pt">Keyword</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">Default</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">Options /
+        description</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">Mandatory ?</td>
+    </tr>
+    <tr>
+        <td style="padding:.75pt .75pt .75pt .75pt">PatternGenerator.Type</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">-</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">MFCC, EMPTY</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">yes</td>
+    </tr>
+    <tr>
+        <td>additional information that depends on
+        PatternGenerator.Type</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+    </tr>
+</table>
+
+<p>An EMPTY PatternGenerator is used only when the user had
+externally generated parameters and wants only to estimate HMMs
+(it is not fully implemented yet).</p>
+
+<h3>PatternGenerator PTR file for the MFCC PatternGenerator</h3>
+
+<table border="1" cellpadding="0" cellspacing="3"
+style="mso-cellspacing:1.5pt">
+    <tr>
+        <td style="padding:.75pt .75pt .75pt .75pt">Keyword</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">Default</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">Options /
+        description</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">Mandatory ?</td>
+    </tr>
+    <tr>
+        <td style="padding:.75pt .75pt .75pt .75pt">PatternGenerator.Type</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">-</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">MFCC</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">yes</td>
+    </tr>
+    <tr>
+        <td style="padding:.75pt .75pt .75pt .75pt">MFCCPatternGenerator.nwindowLength</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">-</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">[1,16384]</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">yes</td>
+    </tr>
+    <tr>
+        <td style="padding:.75pt .75pt .75pt .75pt">MFCCPatternGenerator.nwindowShift</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">-</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">[1,nwindowLength]</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">yes</td>
+    </tr>
+    <tr>
+        <td style="padding:.75pt .75pt .75pt .75pt">MFCC.dsamplingFrequency</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">-</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">[1.0,100000.0]</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">yes</td>
+    </tr>
+    <tr>
+        <td style="padding:.75pt .75pt .75pt .75pt">MFCC.nFFTLength</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">-</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">[2,65536]</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">yes</td>
+    </tr>
+    <tr>
+        <td style="padding:.75pt .75pt .75pt .75pt">MFCCPatternGenerator.dpreEmphasisCoefficient</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">0.97</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">[0.1, 1.0]</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">no</td>
+    </tr>
+    <tr>
+        <td style="padding:.75pt .75pt .75pt .75pt">MFCC.oisZeroThCepstralCoefficientCalculated</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">false</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">true or
+        false. If true nnumberOfMFCCParameters will be
+        automatically incremented by 1.</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">no</td>
+    </tr>
+    <tr>
+        <td style="padding:.75pt .75pt .75pt .75pt">MFCC.nnumberOfMFCCParameters</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">12</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">[2,128]
+        Without counting with the 0th coefficient.</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">no</td>
+    </tr>
+    <tr>
+        <td style="padding:.75pt .75pt .75pt .75pt">MFCC.nnumberofFilters</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">24</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">[nnumberOfMFCCParameters,
+        512]</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">no</td>
+    </tr>
+    <tr>
+        <td style="padding:.75pt .75pt .75pt .75pt">MFCC.nlifteringCoefficient</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">22</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">[1,1024]</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">no</td>
+    </tr>
+    <tr>
+        <td style="padding:.75pt .75pt .75pt .75pt">MFCC.oisLifteringEnabled</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">true</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">true or false</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">no</td>
+    </tr>
+    <tr>
+        <td style="padding:.75pt .75pt .75pt .75pt">MFCCPatternGenerator.oisDCLevelExtractedForEachFrame</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">true</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">true or false</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">no</td>
+    </tr>
+    <tr>
+        <td style="padding:.75pt .75pt .75pt .75pt">MFCCPatternGenerator.oisAverageCepstrumSubtracted</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">false</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">true or false</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">no</td>
+    </tr>
+    <tr>
+        <td style="padding:.75pt .75pt .75pt .75pt">MFCCPatternGenerator.oisMFCCIncludedInOutputParameters</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">true</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">true or false</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">no</td>
+    </tr>
+    <tr>
+        <td style="padding:.75pt .75pt .75pt .75pt">MFCCPatternGenerator.oisEnergyIncludedInOutputParameters</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">true</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">true or false</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">no</td>
+    </tr>
+    <tr>
+        <td style="padding:.75pt .75pt .75pt .75pt">MFCCPatternGenerator.oisFirstDerivativeIncludedInOutputParameters</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">true</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">true or false</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">no</td>
+    </tr>
+    <tr>
+        <td style="padding:.75pt .75pt .75pt .75pt">MFCCPatternGenerator.oisSecondDerivativeIncludedInOutputParameters</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">true</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">true or false</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">no</td>
+    </tr>
+    <tr>
+        <td style="padding:.75pt .75pt .75pt .75pt">MFCCPatternGenerator.dminimumLogEnergyPerFrame</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">-1.0e+10</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">any value</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">no</td>
+    </tr>
+    <tr>
+        <td style="padding:.75pt .75pt .75pt .75pt">MFCCPatternGenerator.nwindowSizeFactorForRegression</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">2</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">[0, 512]</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">no</td>
+    </tr>
+    <tr>
+        <td style="padding:.75pt .75pt .75pt .75pt">MFCCPatternGenerator.dsilenceThreshold</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">50</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">any value (in
+        dB)</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">no</td>
+    </tr>
+    <tr>
+        <td style="padding:.75pt .75pt .75pt .75pt">MFCCPatternGenerator.oisEnergyNormalizedByMaximumEnergy</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">false</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">true or false</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">no</td>
+    </tr>
+</table>
+
+<h3>HMM Configuration HCN file</h3>
+
+<table border="1" cellpadding="0" cellspacing="3"
+style="mso-cellspacing:1.5pt">
+    <tr>
+        <td style="padding:.75pt .75pt .75pt .75pt">Keyword</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">Default</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">Options /
+        description</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">Mandatory ?</td>
+    </tr>
+    <tr>
+        <td style="padding:.75pt .75pt .75pt .75pt">HMM.Type</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">-</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">CONTINUOUS</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">yes</td>
+    </tr>
+    <tr>
+        <td style="padding:.75pt .75pt .75pt .75pt">HMM.nnumberOfStates</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">-</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">[1,16384]</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">yes</td>
+    </tr>
+    <tr>
+        <td style="padding:.75pt .75pt .75pt .75pt">HMM.nnumberOfGaussiansPerMixture</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">-</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">[1,16384]</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">yes</td>
+    </tr>
+    <tr>
+        <td style="padding:.75pt .75pt .75pt .75pt">HMM.nspaceDimension</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">-</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">[1,16384]</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">yes</td>
+    </tr>
+    <tr>
+        <td style="padding:.75pt .75pt .75pt .75pt">HMM.Topology</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">-</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">LEFTRIGHT_NO_SKIPS
+        or DESCRIBED_BY_TRANSITION_MATRIX</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">yes</td>
+    </tr>
+    <tr>
+        <td style="padding:.75pt .75pt .75pt .75pt">HMM.ftransitionMatrix_line_X</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">-</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">X=0, 1, ...,
+        nnumberOfStates - 1. Each line has nnumberOfStates float
+        numbers separated by blank spaces</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">if
+        DESCRIBED_BY_TRANSITION_MATRIX</td>
+    </tr>
+</table>
+
+<h3>TableOfLabels TBL file</h3>
+
+<table border="1" cellpadding="0" cellspacing="3"
+style="mso-cellspacing:1.5pt">
+    <tr>
+        <td style="padding:.75pt .75pt .75pt .75pt">Keyword</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">Default</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">Options /
+        description</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">Mandatory ?</td>
+    </tr>
+    <tr>
+        <td style="padding:.75pt .75pt .75pt .75pt">TableOfLabels.FileName</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">-</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">file name
+        with extension TBL</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">pair with
+        TableOfLabels.Type and TableOfLabels.RootDirectory</td>
+    </tr>
+    <tr>
+        <td style="padding:.75pt .75pt .75pt .75pt">TableOfLabels.RootDirectory</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">-</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">directory
+        which subdirectories will be the table entries</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">pair with
+        TableOfLabels.Type and TableOfLabels.FileName</td>
+    </tr>
+    <tr>
+        <td style="padding:.75pt .75pt .75pt .75pt">TableOfLabels.Type</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">-</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">GENERIC,
+        TIMIT39, TIMIT48, TIMIT60</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">pair with
+        TableOfLabels.FileName and TableOfLabels.RootDirectory</td>
+    </tr>
+    <tr>
+        <td style="padding:.75pt .75pt .75pt .75pt">TableOfLabels.nnumberOfEntries</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">-</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">any integer</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">if GENERIC
+        and TableOfLabels.FileName and
+        TableOfLabels.RootDirectory are not defined.</td>
+    </tr>
+    <tr>
+        <td style="padding:.75pt .75pt .75pt .75pt">TableOfLabels.Entry_X</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">-</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">X = 0, 1,
+        ..., nnumberOfEntries-1. Each line has Strings separated
+        by blank spaces</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">if GENERIC
+        and TableOfLabels.FileName and
+        TableOfLabels.RootDirectory are not defined.</td>
+    </tr>
+</table>
+
+<pre>Example (entry 1 has two labels):</pre>
+
+<pre>TableOfLabels.Type = GENERIC
+TableOfLabels.nnumberOfEntries = 3
+TableOfLabels.Entry_0=banana
+TableOfLabels.Entry_1=tomato potato
+TableOfLabels.Entry_2=apple
+END_OF_HEADER</pre>
+
+<h3><strong>TrainingManager TRN file</strong></h3>
+
+<table border="1" cellpadding="0" cellspacing="3"
+style="mso-cellspacing:1.5pt">
+    <tr>
+        <td style="padding:.75pt .75pt .75pt .75pt">Keyword</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">Default</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">Options /
+        description</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">Mandatory ?</td>
+    </tr>
+    <tr>
+        <td style="padding:.75pt .75pt .75pt .75pt">TrainingManager.Type</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">-</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">SENTENCE,
+        ISOLATED_SEGMENT,<br>
+        CUT_SENTENCE</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">yes</td>
+    </tr>
+    <tr>
+        <td style="padding:.75pt .75pt .75pt .75pt">Database.Type</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">-</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">FILE_ORIENTED,
+        TIMIT</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">yes</td>
+    </tr>
+    <tr>
+        <td style="padding:.75pt .75pt .75pt .75pt">TrainingManager.oshouldCreateDataLocatorFiles</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">true</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">true or false</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">no</td>
+    </tr>
+    <tr>
+        <td style="padding:.75pt .75pt .75pt .75pt">TrainingManager.oshouldCreateSetOfPatternsFiles</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">true</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">true of
+        false. If true, a PatternGenerator.FileName must be
+        specified or information for constructing a
+        PatternGenerator must be available (see PTR file)</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">no</td>
+    </tr>
+    <tr>
+        <td style="padding:.75pt .75pt .75pt .75pt">TrainingManager.oshouldCreateHMMFiles</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">true</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">&nbsp;</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">no</td>
+    </tr>
+    <tr>
+        <td style="padding:.75pt .75pt .75pt .75pt">TrainingManager.oshouldWriteReportFile</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">false</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">&nbsp;</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">no</td>
+    </tr>
+    <tr>
+        <td style="padding:.75pt .75pt .75pt .75pt">TrainingManager.OutputReportTRNFileName</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">-</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">&nbsp;</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">if
+        oshouldWriteReportFile</td>
+    </tr>
+    <tr>
+        <td style="padding:.75pt .75pt .75pt .75pt">TrainingManager.ouseAbsolutePath</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">false</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">true or false</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">no</td>
+    </tr>
+    <tr>
+        <td style="padding:.75pt .75pt .75pt .75pt">TrainingManager.nverbose</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">0</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">[0,10]</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">no</td>
+    </tr>
+    <tr>
+        <td style="padding:.75pt .75pt .75pt .75pt">TrainingManager.DatabaseRootDirectory</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">-</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">&nbsp;</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">yes</td>
+    </tr>
+    <tr>
+        <td style="padding:.75pt .75pt .75pt .75pt">TrainingManager.DirectoryForDataLocators</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">DatabaseRootDirectory</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">&nbsp;</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">no</td>
+    </tr>
+    <tr>
+        <td style="padding:.75pt .75pt .75pt .75pt">TrainingManager.DirectoryForSetOfPatterns</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">DatabaseRootDirectory</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">&nbsp;</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">no</td>
+    </tr>
+    <tr>
+        <td style="padding:.75pt .75pt .75pt .75pt">PatternGenerator.FileName</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">-</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">File name
+        with extension PTR</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">if
+        oshouldCreateSetOfPatternsFiles and in case there is no
+        information to construct a PatternGenerator (see PTR
+        file)</td>
+    </tr>
+    <tr>
+        <td style="padding:.75pt .75pt .75pt .75pt">TrainingManager.DirectoryForHMMs</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">DatabaseRootDirectory</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">&nbsp;</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">no</td>
+    </tr>
+    <tr>
+        <td style="padding:.75pt .75pt .75pt .75pt">TrainingManager.DefaultHMMConfigurationFileName</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">-</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">If it's not
+        specifiedl, it is assumed there will exist a HMM
+        configuration file for each table entry specified through
+        HMMConfiguration_</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">no</td>
+    </tr>
+    <tr>
+        <td style="padding:.75pt .75pt .75pt .75pt">TrainingManager.okeepDirectoryStructureForSOPsOfSentences</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">false</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">True or
+        false. Used only if TrainingManager.Type is SENTENCE</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">no</td>
+    </tr>
+    <tr>
+        <td style="padding:.75pt .75pt .75pt .75pt">DataLocator.FileName</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">-</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">File name
+        with extension DTL that is required only for SENTENCE</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">if SENTENCE
+        and oshouldCreateSetOfPatternsFiles</td>
+    </tr>
+    <tr>
+        <td style="padding:.75pt .75pt .75pt .75pt">DataLocator.FileName_X</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">-</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">X = 0, 1,
+        &#133;, For ISOLATED_SEGMENT, one per table entry.</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">&nbsp;</td>
+    </tr>
+    <tr>
+        <td style="padding:.75pt .75pt .75pt .75pt">TrainingManager.HMMConfiguration_</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">DefaultHMMConfigurationFileName</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">&nbsp;</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">&nbsp;</td>
+    </tr>
+    <tr>
+        <td style="padding:.75pt .75pt .75pt .75pt">SetOfPatterns.FileName_</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">-</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">File name
+        with extension SOP</td>
+        <td style="padding:.75pt .75pt .75pt .75pt">&nbsp;</td>
+    </tr>
+    <tr>
+        <td>SetOfPatternsDataLocator.FileName</td>
+        <td>DataLocator.FileName without extension +
+        &quot;_SOP.DTL&quot;</td>
+        <td>Valid only for SENTENCE</td>
+        <td>no</td>
+    </tr>
+    <tr>
+        <td>missing HMM training information</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+    </tr>
+</table>
+
+<h1>Software generated files</h1>
+
+<p>If some error happens in HMM estimation of table entry X,
+HMM.FileName_X is equal to ERROR_IN_ESTIMATION_PROCEDURE.</p>
+
+<p>&nbsp;</p>
+
+<h1><b>Working scenarios</b></h1>
+
+<p>1) Generate models for 5 isolated words. Each word has a
+directory with files for training (and testing).</p>
+
+<p>2) Generate 48 HMM models, representing 60 labels of TIMIT,
+from scratch.</p>
+
+<p>&nbsp;</p>
+
+<h3><b><i>1) 3 steps for building and testing HMM models for
+isolated words.</i></b></h3>
+
+<p>a) Record speech files and organize them in subdirectories
+below a given root directory.</p>
+
+<p>Choose a <b><i>root </i></b>directory. For each word, create a
+<b><i>word directory </i></b>below <b><i>root</i></b>. All speech
+files should be in a <b><i>word directory </i></b>or their
+subdirectories. The speech files can be of type: WAV (Microsoft's
+Wave), AU (Sun's audio file) or AIFF. So, one can use virtually
+any sound recorder to record the files, as Window's Sound
+Recorder or the shareware CoolEdit, for example.</p>
+
+<p>Let's suppose an example with 2 words: yes and no.</p>
+
+<p>Considering the <b><i>root </i></b>as C:\Databases, one should
+create <b><i>word directory </i></b>yes:</p>
+
+<p>C:\Databases\yes</p>
+
+<p>and put there files with this word.</p>
+
+<p>Similarly, create <b><i>word directory </i></b>no:</p>
+
+<p>C:\Databases\no</p>
+
+<p>The important thing is that below the <b><i>root</i></b>, each
+subdirectory is considered to be a new word. The software will
+search recursively the subdirectories of <b><i>word directory </i></b>(yes
+and no in this case) to build their two HMM models. So, one could
+eventually use subdirectories inside a <b><i>word directory</i></b>.
+For example:</p>
+
+<p>C:\Databases\no\speaker1</p>
+
+<p>C:\Databases\no\speaker2</p>
+
+<p>could be used to divide the files of &quot;no&quot; according
+to the speaker. </p>
+
+<p>At this point, the software is able to automatically create a
+file TBL with a table of labels. Each subdirectory of <b><i>root</i></b>
+(<b><i>word directory</i></b>) is considered to be a table entry
+and the subdirectory name is the label associated to such entry.
+The user himself can build a TBL file too. For this kind of
+isolated-words application, typically each table entry will have
+only one label and this label must be the directory name (below
+the root) associated to that word. The user can create TBL with
+more than one label per entry, but the first label must be the <b><i>word
+directory </i></b>name.</p>
+
+<p>&nbsp;</p>
+
+<p>b) Create a TRN file with training information and run the
+class FileOrientedTrainer at isolatedwords.train.</p>
+
+<p>FileOrientedTrainer (or debug.FileOrientedTrainingManagerTest)
+basically invokes FileOrientedTrainingManager. The class
+FileOrientedTrainingManager creates, for each word, the following</p>
+
+<p>a) one SGM segments file;</p>
+
+<p>b) one SOP SetOfPatterns file with the MFCCs;</p>
+
+<p>c) one HMM file containing the HMM model;</p>
+
+<p>d) one JAR file with all HMMs compacted in a file that can be
+opened using Winzip;</p>
+
+<p>and one report file with extension TRN, that can be used as
+the input file in other simulations.</p>
+
+<p>c) Now, for testing the system.</p>
+
+<p>Go to directory isolatedword\test and run
+RealTimeIsolatedWordRecognition, giving the JAR file name created
+in the training step. The software will read the sampling
+frequency you used to create the HMM models and will use the
+default AudioFormat but adopting the correct sampling frequency.
+So, the number of bits per sample can be different. That should
+be corrected. The nice behavior is: user specify fs and # bits,
+software tries to convert all files to such thing before MFCC are
+calculated and skip file if conversion is not supported.</p>
+
+<p>If one wants to evaluate the recognition (off-line), there is
+the class Classifier in package isolatedword.test. The statistics
+of matches and errors are calculated through the class
+ClassificationStatisticsCalculator.</p>
+
+<h3><b><i>2) Generate 48 HMM models from TIMIT</i></b></h3>
+
+<p>1) Data preparation: create a TrainingManager file (extension
+TRN).</p>
+
+<p>a) Specify a TableOfLabels.</p>
+
+<p>An HMM model will be created for each entry of this table.
+Multiple labels can be associated to a given entry.</p>
+
+<p>One can specify standard tables (TIMIT60, TIMIT48 and TIMIT39)
+or create a different table defined by the user. The software
+will look for the keyword &quot;TableOfLabels.FileName&quot; and
+if one is defined in the TRN file, the table will be read from
+this file. If the keyword &quot;TableOfLabels.FileName&quot; is
+not found, the software will look for the keyword
+&quot;TableOfLabels.Type&quot; (the same procedure is adopted to
+effectively interpret the ASCII file specified by
+&quot;TableOfLabels.FileName&quot;). Keyword
+&quot;TableOfLabels.Type&quot; can assume four values:
+&quot;TIMIT60&quot;, &quot;TIMIT48&quot;, &quot;TIMIT39&quot; or
+&quot;GENERIC&quot;. The software tries to find
+&quot;GENERIC&quot; and in case of success it is assumed that the
+file contain a description of the table providing a keyword
+&quot;TableOfLabels.Entry_X&quot; for each entry, where X goes
+from zero to the number of entries minus one. For example:</p>
+
+<p>TableOfLabels.Type = GENERIC<br>
+TableOfLabels.Entry_0 = ah ax<br>
+TableOfLabels.Entry_1 = b</p>
+
+<p>would specify a table with 2 entries, where the first entry is
+associated to the two labels &quot;ah&quot; and &quot;ax&quot;.</p>
+
+<p>1.b- Using a DTB file, specify the database type: TIMIT, OGI
+Numbers, &quot;file oriented&quot;, etc. and build a list of
+files for DatabaseManager using DatabaseManagerListCreator. Each
+label has one ASCII file associated to it, called SGM. An FSG
+file stores the whole association of labels to SGM files.</p>
+
+<p>2) Parametric representation</p>
+
+<p>2.a- Specify a PatternGenerator, creating a PTR file.<br>
+2.b- Generate a SOP for each label.</p>
+
+<p>3) Model Training</p>
+
+<p>3.a- Specify a HMM topology for each token using a HTP file.
+If some labels will share the same prototype one should provide
+the same file name for such labels. The default prototype is...<br>
+3.b- Train each model and save it as a SetOfHMMs.</p>
+</body>
+</html>

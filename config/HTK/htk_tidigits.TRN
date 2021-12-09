@@ -1,0 +1,89 @@
+###################
+#HTK only
+##########################
+HTK.InputDirectoryWithConfigurationFiles=C:/cvs/laps/ufpaspeech/config/HTK
+#A possible option:
+#HTK.GlobalFlags=-A -D -T 0
+#
+HTK.GlobalFlags=-A -T 0
+HTK.oshouldUseBigrams=true
+HTK.nnumberOfStates=6
+HTK.parametersForHVite=-t 500.0 -p 0 -s 1
+HTK.oshouldRunForcedAlignment=true
+##########################
+Database.Type=TIDIGITS
+TrainingManager.Type=SENTENCE
+#PatternGenerator.FileName=mfcc20k.FCN
+#note that it should be fs=20k below
+PatternGenerator.FileName=mfcceda8k.FCN
+#TableOfLabels.FileName=
+TableOfLabels.Type=TIDIGITS
+TrainingManager.DefaultHMMConfigurationFileName=LR55.HCN
+TrainingManager.GeneralOutputDirectory=/home/aklautau/tidigitsout/
+TrainingManager.TrainSpeechDataRootDirectory=/akdatasets/tidigits/train/
+TrainingManager.TestSpeechDataRootDirectory=/akdatasets/tidigits/test/
+TrainingManager.oshouldSkipReestimationIfFileExists=true
+TrainingManager.oshouldWriteReportFile=true
+TrainingManager.ouseAbsolutePath=false
+TrainingManager.oshouldGuessTestConfigurationAndOverwriteExistingValues=true
+TrainingManager.nverbose=1
+TrainingManager.ThreadPriority=5
+#######################
+OffLineIsolatedSegmentsClassifier.hMMSetFileName=hmms.zip
+OffLineIsolatedSegmentsClassifier.hmmsRootDirectory=/home/TIMITSim/48models/mfccedac39w400s160/
+OffLineIsolatedSegmentsClassifier.nminimumNumberOfFramesInValidPattern=3
+OffLineIsolatedSegmentsClassifier.oareTranscriptionsAvailable=true
+OffLineIsolatedSegmentsClassifier.oisTraining=false
+OffLineIsolatedSegmentsClassifier.oshouldWriteLattices=true
+OffLineIsolatedSegmentsClassifier.parametersRootDirectory=c:/simulations/timit/48models/mfcceda39w240s80/features/test/
+OffLineIsolatedSegmentsClassifier.tableOfLabelsForScoring=c:/simulations/timit/48models/mfcceda39w240s80/TIMIT39.TBL
+OffLineIsolatedSegmentsClassifier.transcriptionsRootDirectory=c:/simulations/timit/39models/transcriptions/monophones/isolated/test/
+#######################
+TrainingManager.oshouldCopyDatabaseToUniqueDirectory=false
+TrainingManager.oshouldCreateTranscriptionsForSpeechFiles=true
+TrainingManager.oshouldConvertSpeechDataIntoParameters=true
+TrainingManager.oshouldCreateHMMFiles=true
+TrainingManager.oshouldRunClassification=true
+#######################
+TrainingManager.oshouldConvertIsolatedSpeechDataIntoParameters=false
+TrainingManager.oshouldConvertSentenceSpeechDataIntoParameters=true
+TrainingManager.oshouldCreateMonophoneHMMPrototypes=true
+TrainingManager.oshouldCreateMonophoneHMMWithBaumWelchForIsolatedSegments=false
+TrainingManager.oshouldCreateMonophoneHMMWithEmbeddedBaumWelch=true
+TrainingManager.oshouldCreatFileWithDynamicRanges=true
+TrainingManager.oshouldRecursivelyCreateMonophoneHMMWithBaumWelchForIsolatedSegments=false
+TrainingManager.oshouldRecursivelyCreateMonophoneHMMWithEmbeddedBaumWelch=true
+TrainingManager.oshouldRecursivelyCreateMonophoneHMMWithSegmentalKMeansForIsolatedSegments=false
+TrainingManager.oshouldRunRecognitionForTestingData=true
+TrainingManager.oshouldRunRecognitionForTrainingData=false
+#######################
+# HMM Training
+#######################
+ContinuousHMMReestimator.fconvergenceThreshold=1.0E-4
+ContinuousHMMReestimator.fcovarianceFloor=1.0E-4
+ContinuousHMMReestimator.fmixtureWeightFloor=0.0
+ContinuousHMMReestimator.nmaximumIterations=20
+ContinuousHMMReestimator.nminimumNumberOfFramesForValidPattern=1
+ContinuousHMMReestimator.nminimumNumberOfPatternsPerModel=3
+ContinuousHMMReestimator.oshouldUpdateCovariance=true
+ContinuousHMMReestimator.oshouldUpdateMean=true
+ContinuousHMMReestimator.oshouldUpdateTransitionMatrix=true
+ContinuousHMMReestimator.oshouldUpdateWeights=true
+TrainingManager.dsegmentalKmeansThresholdToStopIterations=0.02
+TrainingManager.nembeddedBaumNumberOfIterations=2
+TrainingManager.nmaximumNumberOfGaussiansPerMixture=3
+TrainingManager.nsegmentalKmeansGaussiansIncrement=1
+TrainingManager.nsegmentalKmeansInitialNumberOfGaussians=1
+TrainingManager.osegmentalKmeansUseBaumWelchAfterwards=true
+#######################
+ConvertALIENFrontEndToSOPFiles.ExtensionForAlienFiles=ALI
+ConvertALIENFrontEndToSOPFiles.inputDirectory=
+ConvertALIENFrontEndToSOPFiles.oareBigEndian=true
+#######################
+TrainingManager.OriginalDirectoryOfDatabaseTestData=/databases/tidigits/test/
+TrainingManager.OriginalDirectoryOfDatabaseTrainData=/databases/tidigits/train/
+#
+#My additions:
+#
+#TrainingManager.oshouldCreateTriphoneModels=false
+END_OF_HEADER

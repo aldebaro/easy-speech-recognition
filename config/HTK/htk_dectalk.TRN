@@ -1,0 +1,119 @@
+###################
+#HTK only - use HRest or HInit to get system with 1 Gaussian and HERest for more than 1 Gau.
+##########################
+HTK.InputDirectoryWithConfigurationFiles=C:/cvs/laps/ufpaspeech/config/HTK
+#A possible option:
+#HTK.GlobalFlags=-A -D -T 0
+#
+HTK.GlobalFlags=-A -T 0
+HTK.oshouldUseBigrams=true
+HTK.nnumberOfStates=5
+HTK.parametersForHVite=-t 500.0 -p 0 -s 1
+HTK.oshouldRunForcedAlignment=true
+##########################
+Database.Type=DECTALK
+TrainingManager.Type=SENTENCE
+#Specify the front end:
+PatternGenerator.FileName=dectalk.FCN
+#PatternGenerator.FileName=mfcc.FCN
+#PatternGenerator.FileName=plp16k.FCN
+#PatternGenerator.FileName=rasta16k.FCN
+#Specify the phone set
+#TableOfLabels.FileName=
+TableOfLabels.Type=DECTALK
+#
+#The HMM topology (left-right, for example) 
+#Think it is not needed in HTK
+#TrainingManager.DefaultHMMConfigurationFileName=lr55.HCN
+#
+#Directories (NEED TO CHANGE, DEPENDING ON THE USER'S MACHINE):
+TrainingManager.GeneralOutputDirectory=/ak2008/Works/dectalk_htk
+TrainingManager.TrainSpeechDataRootDirectory=C:/akdatasets/tales/small
+#TrainingManager.TrainSpeechDataRootDirectory=C:/akdatasets/tales/train
+TrainingManager.TestSpeechDataRootDirectory=C:/akdatasets/tales/small
+#TrainingManager.TestSpeechDataRootDirectory=C:/akdatasets/tales/test
+#
+#The table to use when testing:
+#OffLineIsolatedSegmentsClassifier.tableOfLabelsForScoring=/home/aldebaro/outspoltech/64models/mfccedac39w400s160/SPOLTECH64.TBL
+#
+#Control the stages we want to run
+#
+# 1) Create transcriptions
+TrainingManager.oshouldCreateTranscriptionsForSpeechFiles=true
+#
+# 2) Front end:
+TrainingManager.oshouldConvertSpeechDataIntoParameters=true
+#finer control over the front end
+TrainingManager.oshouldConvertSentenceSpeechDataIntoParameters=true
+TrainingManager.oshouldConvertIsolatedSpeechDataIntoParameters=true
+#
+# 3) HMM training:
+TrainingManager.oshouldCreateHMMFiles=true
+#
+# 4) Testing:
+TrainingManager.oshouldRunClassification=true
+#Finer control over testing
+TrainingManager.oshouldRunRecognitionForTestingData=true
+TrainingManager.oshouldRunRecognitionForTrainingData=true
+#
+#The minimum number of frames and examples per phone
+ContinuousHMMReestimator.nminimumNumberOfFramesForValidPattern=3
+ContinuousHMMReestimator.nminimumNumberOfPatternsPerModel=1
+#
+###############################################
+#From now, these should not need to be changed:
+###############################################
+TrainingManager.oshouldSkipReestimationIfFileExists=true
+TrainingManager.oshouldWriteReportFile=true
+TrainingManager.ouseAbsolutePath=false
+TrainingManager.oshouldGuessTestConfigurationAndOverwriteExistingValues=false
+TrainingManager.nverbose=1
+TrainingManager.ThreadPriority=5
+#######################
+OffLineIsolatedSegmentsClassifier.hMMSetFileName=hmms.zip
+#OffLineIsolatedSegmentsClassifier.hmmsRootDirectory=/home/TIMITSim/48models/mfccedac39w400s160/
+OffLineIsolatedSegmentsClassifier.nminimumNumberOfFramesInValidPattern=3
+OffLineIsolatedSegmentsClassifier.oareTranscriptionsAvailable=true
+OffLineIsolatedSegmentsClassifier.oisTraining=false
+OffLineIsolatedSegmentsClassifier.oshouldWriteLattices=false
+#OffLineIsolatedSegmentsClassifier.parametersRootDirectory=c:/simulations/timit/48models/mfcceda39w240s80/features/test/
+#OffLineIsolatedSegmentsClassifier.transcriptionsRootDirectory=c:/simulations/timit/39models/transcriptions/monophones/isolated/test/
+#
+#######################
+# HMM Training
+#######################
+TrainingManager.oshouldCreateMonophoneHMMPrototypes=true
+TrainingManager.oshouldCreateMonophoneHMMWithBaumWelchForIsolatedSegments=true
+TrainingManager.oshouldCreateMonophoneHMMWithEmbeddedBaumWelch=true
+TrainingManager.oshouldCreatFileWithDynamicRanges=true
+#not supported I think:
+TrainingManager.oshouldRecursivelyCreateMonophoneHMMWithBaumWelchForIsolatedSegments=false
+TrainingManager.oshouldRecursivelyCreateMonophoneHMMWithEmbeddedBaumWelch=false
+TrainingManager.oshouldRecursivelyCreateMonophoneHMMWithSegmentalKMeansForIsolatedSegments=false
+TrainingManager.nembeddedBaumNumberOfIterations=4
+TrainingManager.nmaximumNumberOfGaussiansPerMixture=10
+#TrainingManager.oshouldCreateTriphoneModels=false
+#
+ContinuousHMMReestimator.fconvergenceThreshold=1.0E-4
+ContinuousHMMReestimator.fcovarianceFloor=1.0E-4
+ContinuousHMMReestimator.fmixtureWeightFloor=0.005
+ContinuousHMMReestimator.nmaximumIterations=20
+ContinuousHMMReestimator.oshouldUpdateCovariance=true
+ContinuousHMMReestimator.oshouldUpdateMean=true
+ContinuousHMMReestimator.oshouldUpdateTransitionMatrix=true
+ContinuousHMMReestimator.oshouldUpdateWeights=true
+TrainingManager.dsegmentalKmeansThresholdToStopIterations=0.02
+TrainingManager.nsegmentalKmeansGaussiansIncrement=1
+TrainingManager.nsegmentalKmeansInitialNumberOfGaussians=1
+TrainingManager.osegmentalKmeansUseBaumWelchAfterwards=true
+#######################
+ConvertALIENFrontEndToSOPFiles.ExtensionForAlienFiles=ALI
+ConvertALIENFrontEndToSOPFiles.inputDirectory=
+ConvertALIENFrontEndToSOPFiles.oareBigEndian=true
+####################### For TIMIT:
+TrainingManager.oshouldCopyDatabaseToUniqueDirectory=false
+#if above is true:
+#TrainingManager.OriginalDirectoryOfDatabaseTestData=/databases/timit/test/
+#TrainingManager.OriginalDirectoryOfDatabaseTrainData=/databases/timit/train/
+END_OF_HEADER
+

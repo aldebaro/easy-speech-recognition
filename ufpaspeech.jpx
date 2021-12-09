@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--JBuilder XML Project-->
+<project>
+  <property category="debug.0" name="SmartStepRedefineClasses" value="0"/>
+  <property category="debug.0" name="SmartStepSkipStaticInitializers" value="0"/>
+  <property category="debug.0" name="SmartStepSkipSynthetics" value="0"/>
+  <property category="idl" name="ProcessIDL" value="false"/>
+  <property category="javaFormatting" name="packageThreshold" value="0"/>
+  <property category="runtime.0" name="BuildTargetOnRun" value="com.borland.jbuilder.build.ProjectBuilder$ProjectBuildAction;make"/>
+  <property category="runtime.0" name="ConfigurationName" value="spock"/>
+  <property category="runtime.0" name="RunnableType" value="com.borland.jbuilder.runtime.ApplicationRunner"/>
+  <property category="runtime.0" name="application.class" value="weka.classifiers.neural.FastNeuralNetwork"/>
+  <property category="runtime.0" name="jsprunner.docbase" value="."/>
+  <property category="runtime.0" name="jsprunner.jspfile" value="../../../Programs/JBuilder4/bin"/>
+  <property category="serverservices" name="disabled.services" value=""/>
+  <property category="sys" name="BackupPath" value="bak"/>
+  <property category="sys" name="CheckStable" value="1"/>
+  <property category="sys" name="Company" value="UCSD"/>
+  <property category="sys" name="Copyright" value="Copyright (c) 2001"/>
+  <property category="sys" name="Description" value="Speech recognition"/>
+  <property category="sys" name="DocPath" value="doc"/>
+  <property category="sys" name="ExcludeClassEnabled" value="0"/>
+  <property category="sys" name="JDK" value="java J2RE 1.3.0 IBM build cx130-20000815"/>
+  <property category="sys" name="LastTag" value="0"/>
+  <property category="sys" name="Libraries" value=""/>
+  <property category="sys" name="MakeStable" value="0"/>
+  <property category="sys" name="OutPath" value="classes"/>
+  <property category="sys" name="SourcePath" value="src"/>
+  <property category="sys" name="Title" value="Spock"/>
+  <property category="sys" name="Version" value="4.0"/>
+  <property category="sys" name="WorkingDirectory" value="."/>
+  <property category="sys" name="enable.auto.packages" value="false"/>
+  <property category="sys" name="warn.auto.packages" value="false"/>
+  <node name="debug" type="Package"/>
+  <node name="edu.ucsd.asr" type="Package"/>
+  <node name="edu.ucsd.gui" type="Package"/>
+  <node name="edu.ucsd.tree" type="Package"/>
+  <node name="edu.ucsd.tree.tokens" type="Package"/>
+  <node name="edu.ucsd.util" type="Package"/>
+  <node name="ioproperties" type="Package"/>
+  <node name="jmat.data" type="Package"/>
+  <node name="jmat.function" type="Package"/>
+  <node name="jmat.io" type="Package"/>
+  <node name="jmat.test" type="Package"/>
+  <node name="run" type="Package"/>
+  <node name="various" type="Package"/>
+  <node name="weka.associations" type="Package"/>
+  <node name="weka.attributeSelection" type="Package"/>
+  <node name="weka.classifiers" type="Package"/>
+  <node name="weka.classifiers.adtree" type="Package"/>
+  <node name="weka.classifiers.evaluation" type="Package"/>
+  <node name="weka.classifiers.j48" type="Package"/>
+  <node name="weka.classifiers.kstar" type="Package"/>
+  <node name="weka.classifiers.m5" type="Package"/>
+  <node name="weka.classifiers.neural" type="Package"/>
+  <node name="weka.clusterers" type="Package"/>
+  <node name="weka.core" type="Package"/>
+  <node name="weka.core.converters" type="Package"/>
+  <node name="weka.estimators" type="Package"/>
+  <node name="weka.experiment" type="Package"/>
+  <node name="weka.filters" type="Package"/>
+  <node name="weka.gui" type="Package"/>
+  <node name="weka.gui.experiment" type="Package"/>
+  <node name="weka.gui.explorer" type="Package"/>
+  <node name="weka.gui.streams" type="Package"/>
+  <node name="weka.gui.treevisualizer" type="Package"/>
+  <node name="weka.gui.visualize" type="Package"/>
+  <node name="DukovJAR" type="Archive">
+    <property category="archiving" name="archiverClass" value="com.borland.jbuilder.wizard.archive.ApplicationArchiver"/>
+    <property category="archiving" name="buildWithProject" value="0"/>
+    <property category="archiving" name="extraDeployRoots.1" value="C:run.Dukov"/>
+    <property category="archiving" name="manifestMainClass" value="run.Dukov"/>
+    <property category="archiving" name="outPathState" value="2"/>
+    <property category="archiving" name="targetCompressed" value="1"/>
+    <property category="archiving" name="targetPath" value="jars/dukov.jar"/>
+  </node>
+  <node name="ListenTIMITJAR" type="Archive">
+    <property category="archiving" name="archiverClass" value="com.borland.jbuilder.wizard.archive.ApplicationArchiver"/>
+    <property category="archiving" name="buildWithProject" value="0"/>
+    <property category="archiving" name="extraDeployRoots.1" value="C:run.ListenTIMIT"/>
+    <property category="archiving" name="manifestMainClass" value="run.ListenTIMIT"/>
+    <property category="archiving" name="outPathState" value="2"/>
+    <property category="archiving" name="targetCompressed" value="1"/>
+    <property category="archiving" name="targetPath" value="jars/ListenTIMIT.jar"/>
+  </node>
+  <node name="OnlySpockJAR" type="Archive">
+    <property category="archiving" name="archiverClass" value="com.borland.jbuilder.wizard.archive.ApplicationArchiver"/>
+    <property category="archiving" name="buildWithProject" value="0"/>
+    <property category="archiving" name="extraDeployRoots.1" value="C:run.Spock"/>
+    <property category="archiving" name="manifestMainClass" value="run.Spock"/>
+    <property category="archiving" name="outPathState" value="2"/>
+    <property category="archiving" name="targetCompressed" value="1"/>
+    <property category="archiving" name="targetPath" value="jars/onlyspock.jar"/>
+  </node>
+  <node name="ufpaspeech" type="Archive">
+    <property category="archiving" name="archiverClass" value="com.borland.jbuilder.wizard.archive.ApplicationArchiver"/>
+    <property category="archiving" name="buildWithProject" value="0"/>
+    <property category="archiving" name="contentRules.1" value="I:**/*.*"/>
+    <property category="archiving" name="contentRules.2" value="F:src/weka/gui/GenericObjectEditor.props;weka/gui/GenericObjectEditor.props"/>
+    <property category="archiving" name="contentRules.3" value="F:src/weka/gui/weka_animated.gif;weka/gui/weka_animated.gif"/>
+    <property category="archiving" name="contentRules.4" value="F:src/weka/gui/weka_icon.gif;weka/gui/weka_icon.gif"/>
+    <property category="archiving" name="contentRules.5" value="F:src/weka/gui/weka_icon.jpg;weka/gui/weka_icon.jpg"/>
+    <property category="archiving" name="contentRules.6" value="F:src/weka/gui/weka_stationary.gif;weka/gui/weka_stationary.gif"/>
+    <property category="archiving" name="contentRules.7" value="F:src/weka/gui/weka3.gif;weka/gui/weka3.gif"/>
+    <property category="archiving" name="extraDeployRoots.1" value="F:weka/gui/GenericObjectEditor.props"/>
+    <property category="archiving" name="extraDeployRoots.2" value="F:weka/gui/weka_animated.gif"/>
+    <property category="archiving" name="extraDeployRoots.3" value="F:weka/gui/weka_icon.gif"/>
+    <property category="archiving" name="extraDeployRoots.4" value="F:weka/gui/weka_icon.jpg"/>
+    <property category="archiving" name="extraDeployRoots.5" value="F:weka/gui/weka_stationary.gif"/>
+    <property category="archiving" name="extraDeployRoots.6" value="F:weka/gui/weka3.gif"/>
+    <property category="archiving" name="manifestMainClass" value="run.Simulator"/>
+    <property category="archiving" name="targetCompressed" value="1"/>
+    <property category="archiving" name="targetPath" value="ufpaspeech.jar"/>
+    <property category="archiving" name="usingRules" value="1"/>
+  </node>
+  <node name="VisualizeTIMITClassification" type="Archive">
+    <property category="archiving" name="archiverClass" value="com.borland.jbuilder.wizard.archive.ApplicationArchiver"/>
+    <property category="archiving" name="buildWithProject" value="0"/>
+    <property category="archiving" name="extraDeployRoots.1" value="C:run.VisualizeTIMITClassification"/>
+    <property category="archiving" name="manifestMainClass" value="run.VisualizeTIMITClassification"/>
+    <property category="archiving" name="outPathState" value="2"/>
+    <property category="archiving" name="targetCompressed" value="1"/>
+    <property category="archiving" name="targetPath" value="jars/viewclassification.jar"/>
+  </node>
+  <node name="WekaJAR" type="Archive">
+    <property category="archiving" name="archiverClass" value="com.borland.jbuilder.wizard.archive.ApplicationArchiver"/>
+    <property category="archiving" name="buildWithProject" value="0"/>
+    <property category="archiving" name="extraDeployRoots.1" value="C:weka.gui.GUIChooser"/>
+    <property category="archiving" name="extraDeployRoots.10" value="C:weka.gui.FileEditor"/>
+    <property category="archiving" name="extraDeployRoots.2" value="F:weka/gui/GenericObjectEditor.props"/>
+    <property category="archiving" name="extraDeployRoots.3" value="F:weka/gui/weka_animated.gif"/>
+    <property category="archiving" name="extraDeployRoots.4" value="F:weka/gui/weka_icon.gif"/>
+    <property category="archiving" name="extraDeployRoots.5" value="F:weka/gui/weka_icon.jpg"/>
+    <property category="archiving" name="extraDeployRoots.6" value="F:weka/gui/weka_stationary.gif"/>
+    <property category="archiving" name="extraDeployRoots.7" value="F:weka/gui/weka3.gif"/>
+    <property category="archiving" name="extraDeployRoots.8" value="C:weka.gui.explorer.Explorer"/>
+    <property category="archiving" name="extraDeployRoots.9" value="C:weka.gui.experimenter.Experimenter"/>
+    <property category="archiving" name="manifestMainClass" value="weka.gui.explorer.Explorer"/>
+    <property category="archiving" name="targetCompressed" value="1"/>
+    <property category="archiving" name="targetPath" value="jars/weka.jar"/>
+  </node>
+  <file path="src/edu/ucsd/util/EditDistance.java"/>
+  <file path="src/JMatLink.java"/>
+  <file path="src/jmat/MatlabSyntax.java"/>
+  <file path="src/debug/SortedListTest.java"/>
+  <file path="src/debug/WSJDecoderTest.java"/>
+</project>

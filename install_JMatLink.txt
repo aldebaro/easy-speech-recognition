@@ -1,0 +1,39 @@
+***********************************************************************
+** Author: Igor Couto                                                **
+** Date: 09/09/2009                                                  **
+** Changelog - JMatLink.c added in src/ufpa/matlab                   **
+**             JMatLink.java replaced in sr/ufpa/matlab              **
+***********************************************************************
+
+To install JMatlink on Linux systems, you will need generate only the 
+header file and native library (libJMatLink.so) in order to allow 
+Matlab<-->C<-->Java communications. 
+
+At ufpaspeech/trunk folder:
+
+1. First of all, you should compile the sources. Only type:
+$ ant
+
+2. After, execute the following command line to create the header file in 
+src/ufpa/matlab. Attention, the header is "packed" in classes/ufpa/matlab, 
+but saved src/classes/ufpa/matlab:
+$ javah -d src/ufpa/matlab -classpath classes ufpa.matlab.JMatLink
+
+3. Is time to create libJMatLink.so. $MATLAB_HOME is the path to matlab 
+root folder:
+$ gcc -DV5_COMPAT -static -shared -L$MATLAB_HOME/sys/os/glnx86 -L$MATLAB_HOME/bin/glnx86 -leng -I$MATLAB_HOME/extern/include src/ufpa/matlab/JMatLink.c -o libJMatLink.so
+
+4. Move libJMatLink.so to $MATLAB_HOME/bin/glnx86 folder. Probably, a root 
+acess will be required.
+$ sudo mv libJMatLink.so $MATLAB_HOME/bin/glnx86
+
+5. Add the path $MATLAB_HOME/bin/glnx86 at LD_LIBRARY_PATH variable:
+$ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$MATLAB_MAIN_PATH/bin/glnx86
+
+6. Finally, execute MatlabInterfacer class in order to verify:
+$ java -cp classes edu.ucsd.asr.MatlabInterfacer
+
+
+PS: On step 5, you can add definitely the matlab path at LD_PATH_LIBRARY
+variable. At .bashrc file include the following line:
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/matlab/bin/glnx86/:.

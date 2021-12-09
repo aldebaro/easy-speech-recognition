@@ -1,0 +1,106 @@
+Database.Type=SPOLTECHRAW
+TrainingManager.Type=SENTENCE
+#Specify the front end:
+#PatternGenerator.FileName=mfcc.FCN
+#PatternGenerator.FileName=plp16k.FCN
+PatternGenerator.FileName=rasta16k.FCN
+#Specify the phone set
+#TableOfLabels.FileName=
+TableOfLabels.Type=SPOLTECH64
+#
+#The HMM topology (left-right, for example)
+TrainingManager.DefaultHMMConfigurationFileName=lr55.HCN
+#
+#Directories:
+TrainingManager.GeneralOutputDirectory=/home/aldebaro/outspoltech
+TrainingManager.TrainSpeechDataRootDirectory=/home/luiz/spock/spoltech/train
+TrainingManager.TestSpeechDataRootDirectory=/home/luiz/spock/spoltech/test
+#
+#The table to use when testing:
+#OffLineIsolatedSegmentsClassifier.tableOfLabelsForScoring=/home/aldebaro/outspoltech/64models/mfccedac39w400s160/SPOLTECH64.TBL
+#
+#Control the stages we want to run
+#
+# 1) Create transcriptions
+TrainingManager.oshouldCreateTranscriptionsForSpeechFiles= true
+#
+# 2) Front end:
+TrainingManager.oshouldConvertSpeechDataIntoParameters=true
+#finer control over the front end
+TrainingManager.oshouldConvertSentenceSpeechDataIntoParameters=true
+TrainingManager.oshouldConvertIsolatedSpeechDataIntoParameters=true
+#
+# 3) HMM training:
+TrainingManager.oshouldCreateHMMFiles=true
+#
+# 4) Testing:
+TrainingManager.oshouldRunClassification=true
+#Finer control over testing
+TrainingManager.oshouldRunRecognitionForTestingData=true
+TrainingManager.oshouldRunRecognitionForTrainingData=true
+#
+#The minimum number of frames and examples per phone
+ContinuousHMMReestimator.nminimumNumberOfFramesForValidPattern=3
+ContinuousHMMReestimator.nminimumNumberOfPatternsPerModel=3
+#
+###############################################
+#From now, these should not need to be changed:
+###############################################
+TrainingManager.oshouldSkipReestimationIfFileExists=true
+TrainingManager.oshouldWriteReportFile=true
+TrainingManager.ouseAbsolutePath=false
+TrainingManager.oshouldGuessTestConfigurationAndOverwriteExistingValues=false
+TrainingManager.nverbose=1
+TrainingManager.ThreadPriority=5
+#######################
+OffLineIsolatedSegmentsClassifier.hMMSetFileName=hmms.zip
+#OffLineIsolatedSegmentsClassifier.hmmsRootDirectory=/home/TIMITSim/48models/mfccedac39w400s160/
+OffLineIsolatedSegmentsClassifier.nminimumNumberOfFramesInValidPattern=3
+OffLineIsolatedSegmentsClassifier.oareTranscriptionsAvailable=true
+OffLineIsolatedSegmentsClassifier.oisTraining=false
+OffLineIsolatedSegmentsClassifier.oshouldWriteLattices=false
+#OffLineIsolatedSegmentsClassifier.parametersRootDirectory=c:/simulations/timit/48models/mfcceda39w240s80/features/test/
+#OffLineIsolatedSegmentsClassifier.transcriptionsRootDirectory=c:/simulations/timit/39models/transcriptions/monophones/isolated/test/
+
+TrainingManager.oshouldCreateMonophoneHMMPrototypes=true
+TrainingManager.oshouldCreateMonophoneHMMWithBaumWelchForIsolatedSegments=false
+TrainingManager.oshouldCreateMonophoneHMMWithEmbeddedBaumWelch=false
+TrainingManager.oshouldCreatFileWithDynamicRanges=true
+TrainingManager.oshouldRecursivelyCreateMonophoneHMMWithBaumWelchForIsolatedSegm
+ents=true
+TrainingManager.oshouldRecursivelyCreateMonophoneHMMWithEmbeddedBaumWelch=false
+TrainingManager.oshouldRecursivelyCreateMonophoneHMMWithSegmentalKMeansForIsolat
+edSegments=false
+#######################
+# HMM Training
+#######################
+ContinuousHMMReestimator.fconvergenceThreshold=1.0E-4
+ContinuousHMMReestimator.fcovarianceFloor=1.0E-4
+ContinuousHMMReestimator.fmixtureWeightFloor=0.005
+ContinuousHMMReestimator.nmaximumIterations=20
+ContinuousHMMReestimator.oshouldUpdateCovariance=true
+ContinuousHMMReestimator.oshouldUpdateMean=true
+ContinuousHMMReestimator.oshouldUpdateTransitionMatrix=true
+ContinuousHMMReestimator.oshouldUpdateWeights=true
+TrainingManager.dsegmentalKmeansThresholdToStopIterations=0.02
+TrainingManager.nembeddedBaumNumberOfIterations=2
+#what is the meaning of this? don't we define model elsewhere?
+TrainingManager.nmaximumNumberOfGaussiansPerMixture=10
+TrainingManager.nsegmentalKmeansGaussiansIncrement=1
+TrainingManager.nsegmentalKmeansInitialNumberOfGaussians=1
+TrainingManager.osegmentalKmeansUseBaumWelchAfterwards=true
+#######################
+ConvertALIENFrontEndToSOPFiles.ExtensionForAlienFiles=ALI
+ConvertALIENFrontEndToSOPFiles.inputDirectory=
+ConvertALIENFrontEndToSOPFiles.oareBigEndian=true
+####################### For TIMIT:
+TrainingManager.oshouldCopyDatabaseToUniqueDirectory=false
+#if above is true:
+#TrainingManager.OriginalDirectoryOfDatabaseTestData=/databases/timit/test/
+#TrainingManager.OriginalDirectoryOfDatabaseTrainData=/databases/timit/train/
+#
+#Nikola additions:
+#
+#TrainingManager.oshouldCreateTriphoneModels=false
+END_OF_HEADER
+

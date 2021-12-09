@@ -1,0 +1,22 @@
+NAME PatternGenerator.Type DESCRIPTION Type of features COMMENT Describes the front end TYPE String VALUE MFCC MIN 0 
+NAME MFCCPatternGenerator.nwindowLength DESCRIPTION Window length COMMENT Size of window in samples, e.g., 160 for a 20ms windows at fs = 8 kHz TYPE Integer VALUE 400 
+NAME MFCCPatternGenerator.nwindowShift DESCRIPTION Window shift COMMENT Window shift in samples, e.g., 80 for a 10ms shift at fs = 8 kHz corresponding to 100 frames per second TYPE Integer VALUE 160 
+NAME MFCC.dsamplingFrequency DESCRIPTION Sampling frequency COMMENT fs in Hz TYPE Double VALUE 16000.0 
+NAME MFCC.nFFTLength DESCRIPTION FFT length COMMENT Power of 2. If bigger than window length system will use 0-padding TYPE Integer VALUE 512 
+NAME MFCCPatternGenerator.dpreEmphasisCoefficient DESCRIPTION Pre-emphasis coefficient COMMENT Coefficient of first-order high-pass filter TYPE Double VALUE 0.97 
+NAME MFCCPatternGenerator.oisDCLevelExtractedForEachFrame DESCRIPTION Make each frame 0 mean? COMMENT Extract DC level for each frame TYPE boolean VALUE true
+NAME MFCCPatternGenerator.oisAverageCepstrumSubtracted DESCRIPTION Use Cepstral Mean Subtraction? COMMENT Use CMS: subtract the average MFCC vector from all vectors TYPE boolean VALUE true
+NAME MFCC.nnumberofFilters DESCRIPTION Number of filters COMMENT Number of filters organized in mel scale TYPE Integer VALUE 24 
+NAME MFCC.oisZeroThCepstralCoefficientCalculated DESCRIPTION Include 0-th MFCC coefficient? COMMENT Instead of the 0-th MFCC people usually include the raw energy TYPE boolean VALUE false
+NAME MFCC.oisLifteringEnabled DESCRIPTION Use liftering? COMMENT Use filtering in cepstral domain TYPE boolean VALUE true
+NAME MFCC.nlifteringCoefficient DESCRIPTION Liftering coefficient COMMENT Coefficient used in filtering in cepstral domain TYPE Integer VALUE 22 
+NAME PatternGenerator.nnumberOfBaseParameters DESCRIPTION Number of 'base' parameters COMMENT Number of features representing a frame without counting with derivatives TYPE Integer VALUE 12 
+NAME PatternGeneratorWithEnergyAndDerivatives.oisBaseParameterIncludedInOutputParameters DESCRIPTION Include parameters? COMMENT If one wants only the derivatives set this option to false TYPE boolean VALUE true
+NAME PatternGeneratorWithEnergyAndDerivatives.oisEnergyIncludedInOutputParameters DESCRIPTION Include energy? COMMENT If true, the energy of each frame is included in features set TYPE boolean VALUE true
+NAME PatternGeneratorWithEnergyAndDerivatives.oisFirstDerivativeIncludedInOutputParameters DESCRIPTION Include first derivative? COMMENT If true, an estimation of the first derivative is included in features set TYPE boolean VALUE true
+NAME PatternGeneratorWithEnergyAndDerivatives.oisSecondDerivativeIncludedInOutputParameters DESCRIPTION Include second derivative? COMMENT If true, an estimation of the first second is included in features set TYPE boolean VALUE true
+NAME PatternGeneratorWithEnergyAndDerivatives.dminimumLogEnergyPerFrame DESCRIPTION Energy floor COMMENT Minimum value for log energy of a frame TYPE Double VALUE -1.0E10 
+NAME PatternGeneratorWithEnergyAndDerivatives.nwindowSizeFactorForRegression DESCRIPTION Window size for derivative estimation COMMENT Example: if 2 the derivative of frame n is estimated using frames n-2 to n+2 (restricted to 2) TYPE Integer VALUE 2 MIN 2 MAX 2 
+NAME PatternGeneratorWithEnergyAndDerivatives.oisEnergyNormalizedByMaximumEnergy DESCRIPTION Normalize energy? COMMENT Normalize the energy given its maximum value and a silence threshold TYPE boolean VALUE true
+NAME PatternGeneratorWithEnergyAndDerivatives.dsilenceThreshold DESCRIPTION Silence threshold COMMENT Avoids too small values for filter output (otherwise, if power~=0, log(power)~=-infinite) TYPE Double VALUE 50.0 
+NAME PatternGenerator.Description DESCRIPTION Directory identifier COMMENT If not specified, system will provide default value. Features and simulation results will be organized below a subdirectory with this name. Use it to distinguish among front ends TYPE String VALUE mfccedac39w400s160 MIN 0 

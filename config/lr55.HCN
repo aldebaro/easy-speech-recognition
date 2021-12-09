@@ -1,0 +1,6 @@
+NAME HMM.Type DESCRIPTION HMM Type COMMENT Continuous, discrete, etc. At this moment, only continuous HMMs are supported TYPE String VALUE CONTINUOUS MIN 0 MAX 80
+NAME HMM.Topology DESCRIPTION HMM topology COMMENT Note: A DESCRIBED_BY_TRANSITION_MATRIX topology requires the user to specify the matrix by editing the HCN file TYPE ComboBox VALUE LEFTRIGHT_NO_SKIPS|DESCRIBED_BY_TRANSITION_MATRIX#0
+NAME HMM.nnumberOfStates DESCRIPTION Number of states COMMENT Add 2 to take in account 'dummy' first and last states. Example: 5 would mean 3 emitting (actual) states TYPE Integer VALUE 5
+NAME HMM.nspaceDimension DESCRIPTION Total # of features COMMENT Space dimension. Example: 24 for 12 MFCC's + first derivatives TYPE Integer VALUE 39
+NAME HMM.nnumberOfGaussiansPerMixture DESCRIPTION Gaussians per mixture COMMENT Initial number of Gaussian PDFs per mixture (per state) TYPE Integer VALUE 1
+NAME HMM.TopologyIdentifier DESCRIPTION Subdirectory Identifier COMMENT System will write HMMs under subdirectory with this name. It is useful to organize results for different HMM topologies TYPE String VALUE lr55 MIN 0
